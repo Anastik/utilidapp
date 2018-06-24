@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width", initial-scale="1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+    <link rel="shortcut icon" type="image/png" href="images/Hammer.png"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+    <script type="text/javascript" language="javascript" charset="utf-8">
+
+    function forceLower(strInput){
+        strInput.value=strInput.value.toLowerCase();
+      }
+    function getBlock(){
+        axios.get('https://api-r.bitcoinchain.com/v1/status').then(function(result) {
+          foo = result.data.height;
+      })}
+
+    function getEstimate(){
+        axios.get('https://core.blockstack.org/v1/prices/names/' + document.getElementById('username').value).then(function(estimate) {
+        foo2 = estimate.data.total_estimated_cost.btc;
+        estimate = estimate.data.total_estimated_cost.satoshis;
+        var value5 = estimate;
+        document.getElementById('btc').value = value5;
+      })}
+
+    function getUSDBTC(){
+        axios.get('https://www.bitstamp.net/api/v2/ticker/btcusd/?cors=1').then(function(usdbtc) {
+        usdbtc = usdbtc.data.last;
+        var value6 = usdbtc;
+        var value7 = foo2;
+        var value8 = "$" + parseFloat((value6) * (value7)).toFixed(2);
+        document.getElementById('usd').value = value8;
+      })}
+
+    function getDate(){
+        axios.get('https://core.blockstack.org/v1/names/' + document.getElementById('username').value).then(function(response) {
+        foo1 = response.data.expire_block;
+        var date = new Date;
+        var newdate = new Date(date);
+        var value1 = foo1;
+        var value2 = foo;
+        var value3 = Math.floor((parseInt(value1) - parseInt(value2)) * 9.75 / 60 / 24);
+        var value4 = Math.floor(parseInt(value1) - parseInt(value2));
+        document.getElementById('blocks').value = value4;
+        newdate.setDate(newdate.getDate() + (value3));
+        var dd = newdate.getDate();
+        var mm = newdate.getMonth() + 1;
+        var y = newdate.getFullYear();
+        var someFormattedDate = mm + '/' + dd + '/' + y;
+        document.getElementById('expire_Date').value = someFormattedDate;
+        })}
+
+    </script>
+    <title>Utilidapp</title>
+</head>
+<body onload="getBlock()">
+
+  <nav class="navbar bg-primary navbar-dark navbar-expand-sm">
+    <div class="container">
+      <div class="navbar-brand">Utilidapp</div>
+        <div class="navbar-nav">
+          <a class="nav-item nav-link disabled" href="#">About Us</a>
+        </div>
+      </div>
+    </nav>
+
+  <nav class="navbar bg-light navbar-light navbar-expand-sm fixed-bottom">
+    <div class="container justify-content-center">
+        <div class="navbar-nav">
+        </div>
+        <span class="navbar-text justify-content-center">&copy; 2018</span>
+      </div>
+    </nav>
+
+<div class="container mt-2 bg-light item border border-primary rounded px-5">
+
+<form>
+
+  <h3 class="text-center">Blockstack ID Calculator</h3>
+
+  <fieldset class="form-group">
+
+    <div class="alert alert-info alert-dismissible fade show">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+
+      </button>
+
+
+      <h6>Estimated Date</h6>
+      <p class="mb-2">Due to Bitcoin block mining time variances, this is an approximate date. The closer your ID is to the expriation block, the more precise it will be.</p>
+    </div>
+
+    <div class="form-group">
+      <label class="form-control-label" for="ownername">Enter Blockstack ID</label>
+      <input class="form-control" id="username" type="text" placeholder="e.g. name.id" onkeyup="return forceLower(this);"/>
+    </div>
+
+<div class="form-group">
+    <input class="btn btn-primary" type="button" onclick="getDate(); getEstimate(); getUSDBTC()" value="Submit"/>
+</div>
+
+<div class="form-group">
+  <label class="form-control-label" for="ownername">Expiration Date</label>
+    <input class="form-control" id="expire_Date" type="text"/>
+</div>
+
+<div class="form-group">
+  <label class="form-control-label" for="ownername">Blocks Till Expiration</label>
+    <input class="form-control" id="blocks" type="text"/>
+</div>
+
+<div class="form-group">
+  <label class="form-control-label" for="ownername">Satoshis for ID</label>
+    <input class="form-control" id="btc" type="text"/>
+</div>
+
+<div class="form-group">
+  <label class="form-control-label" for="ownername">USD for ID</label>
+    <input class="form-control" id="usd" type="text"/>
+</div>
+
+</fieldset>
+
+</form>
+</div>
+</div>
+
+</body>
+</html>
